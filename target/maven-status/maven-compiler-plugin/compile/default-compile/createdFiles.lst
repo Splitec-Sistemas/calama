@@ -1,0 +1,11 @@
+org\splitec\controller\UvController.class
+org\splitec\CalamaApplication.class
+org\splitec\model\GetIndex$Result.class
+org\splitec\security\JwtAuthenticationFilter.class
+org\splitec\service\UvService.class
+org\splitec\controller\AuthenticationController.class
+org\splitec\dto\UvIndexResponse.class
+org\splitec\client\HttpClient.class
+org\splitec\config\SecurityConfig.class
+org\splitec\model\GetIndex.class
+org\splitec\service\JwtService.class
