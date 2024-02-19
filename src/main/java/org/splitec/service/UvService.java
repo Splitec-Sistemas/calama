@@ -1,7 +1,6 @@
 package org.splitec.service;
 
 import org.splitec.client.HttpClient;
-import org.splitec.dto.UvIndexResponse;
 import org.splitec.model.GetIndex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,7 @@ public class UvService {
     this.httpClient = httpClient;
   }
 
-  public UvIndexResponse getUvIndex(double latitude, double longitude) {
+  public GetIndex getUvIndex(String latitude, String longitude) {
     String urlTemplate = UriComponentsBuilder
         .fromUriString("https://api.openuv.io/api/v1/uv")
         .queryParam("lat", "{lat}")
@@ -33,11 +32,17 @@ public class UvService {
     headers.put("x-access-token", "openuv-4turllogbjxz-io");
 
     Map<String, String> uriVariables = new HashMap<>();
-    uriVariables.put("lat", String.valueOf(latitude));
-    uriVariables.put("lng", String.valueOf(longitude));
+    uriVariables.put("lat", latitude);
+    uriVariables.put("lng", longitude);
 
-    ResponseEntity<GetIndex> response = (ResponseEntity<GetIndex>) httpClient.getRequest(urlTemplate, headers, uriVariables, GetIndex.class);
-    response.getBody().getResult().getUv();
-    return new UvIndexResponse(latitude, longitude, response.getBody().getResult().getUv());
+    ResponseEntity<GetIndex> response = (ResponseEntity<GetIndex>) httpClient.getRequest(
+        urlTemplate,
+        headers,
+        uriVariables,
+        GetIndex.class);
+    return response.getBody();
+    //double uvIndex = response.getBody().getResult().getUv();
+   //GetIndex.SafeExposureTime safeExposureTime = response.getBody().getResult().getSafeExposureTime();
+    //return new UvIndexResponse(latitude, longitude, uvIndex , safeExposureTime);
   }
 }

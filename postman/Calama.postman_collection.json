@@ -1,0 +1,72 @@
+{
+	"info": {
+		"_postman_id": "2e52ba1c-97e1-4e33-999d-58d3576d50d3",
+		"name": "Calama",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23332727"
+	},
+	"item": [
+		{
+			"name": "Get Index",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnYWJyaWVsIiwiZXhwIjoxNzA4MDIyMjAyfQ._jU01LpMpBzMqkV-8n-F_lLqVyicfC10D833lbVWowXSChjQ1LeCUyGeehMhSNI3t5aAU9cotbgCUiEtUxY-sg",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/uv/index?latitude=-23.723223&longitude=-46.626690",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"uv",
+						"index"
+					],
+					"query": [
+						{
+							"key": "latitude",
+							"value": "-23.723223"
+						},
+						{
+							"key": "longitude",
+							"value": "-46.626690"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"gabriel\",\r\n    \"password\": \"testing\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
