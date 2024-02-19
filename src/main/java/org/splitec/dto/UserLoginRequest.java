@@ -3,6 +3,7 @@ package org.splitec.dto;
 public class UserLoginRequest {
   private String username;
   private String password;
+  private String refreshToken;
 
   public String getPassword() {
     return password;
@@ -18,5 +19,13 @@ public class UserLoginRequest {
 
   public void setUsername(String username) {
     this.username = username;
+  }
+
+  public String getRefreshToken() {
+    return refreshToken;
+  }
+
+  public void setRefreshToken(String refreshToken) {
+    this.refreshToken = refreshToken;
   }
 }

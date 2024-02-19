@@ -12,7 +12,18 @@ public class AuthenticationController {
 
   @PostMapping("/login")
   public UserLoginResponse login(@RequestBody UserLoginRequest user) {
-    String token = new JwtService().generateToken(user.getUsername());
-    return new UserLoginResponse(token, "refreshTokenTest");
+    JwtService jwtService = new JwtService();
+    String token = jwtService.generateToken(user.getUsername());
+    String refreshToken = jwtService.generateRefreshToken(user.getUsername());
+    return new UserLoginResponse(token, refreshToken);
+  }
+
+  @PostMapping("/token/refresh")
+  public UserLoginResponse refreshToken(@RequestBody UserLoginRequest user) {
+    JwtService jwtService = new JwtService();
+    String username = jwtService.validateTokenAndRetrieveSubject(user.getRefreshToken());
+    String newAccessToken = jwtService.generateToken(username);
+    String newRefreshToken = jwtService.generateRefreshToken(username);
+    return new UserLoginResponse(newAccessToken, newRefreshToken);
   }
 }
