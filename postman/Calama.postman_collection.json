@@ -13,7 +13,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnYWJyaWVsIiwiZXhwIjoxNzA4MDIyMjAyfQ._jU01LpMpBzMqkV-8n-F_lLqVyicfC10D833lbVWowXSChjQ1LeCUyGeehMhSNI3t5aAU9cotbgCUiEtUxY-sg",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnYWJyaWVsIiwiZXhwIjoxNzA4MDMyNTAzfQ.B0n9KuVgzaZp57Y5WMR24hKaarXPHUEDnppgSsYaS1VfkG2Sj6-vgabk7FW7zkWn-FLpLKYU51yzIMWI8c3XgA",
 						"type": "text"
 					}
 				],
@@ -63,6 +63,100 @@
 					"port": "8080",
 					"path": [
 						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Refresh Token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnYWJyaWVsIiwiZXhwIjoxNzA4MDM5NDMxfQ.LbQ5YaSHUly3pfGZvlf1VKRI8_Ewu84SOFvdaoyM1I37HmL7OJCLmYg9R5scjL-Sp3EjLtBVRyl10Z_vCgd17A",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"refreshToken\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnYWJyaWVsIiwiZXhwIjoxNzA4MjExMzMxfQ.3Je9KVYAVXPv41KZqJGEOSd_PNJ0yT0XIizFXF8ysLDM2-qKmZl8d2HdHOqmNMap4BBNp2Fo4afIuJFn7MepQA\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/token/refresh",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"token",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Uv Health Points",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnYWJyaWVsIiwiZXhwIjoxNzA4MzA3MTkzfQ.K1VW5yFxVFCJOQVWQLCu8kotqSR8h8bItNTYNO1fLfb3Mbwh6MFpjNOi0IjpCecjnCqDqN9eZYigi0hWy0t0fQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/uv/health",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"uv",
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Uv Exposure",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnYWJyaWVsIiwiZXhwIjoxNzA4Mzk0NjExfQ.BfYVPP6ruU3vJxQ5hSYNnPgcZM7d7gjpI-2Bj3mfeNluFnGIOxx6Zx2YF5GfNkuVutU8oPOm833OT3T4omtwqw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"rssiWifi\": 90,\r\n    \"gpsPrecision\": 15,\r\n    \"luxValue\": 10,\r\n    \"lat\": \"35.898390\",\r\n    \"lon\": \"140.716374\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/uv/health/highuv",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"uv",
+						"health",
+						"highuv"
 					]
 				}
 			},
