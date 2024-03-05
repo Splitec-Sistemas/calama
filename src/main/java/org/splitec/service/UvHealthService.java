@@ -4,7 +4,9 @@ import org.splitec.client.HttpClient;
 import org.splitec.dto.UvExposureInfoRequest;
 import org.splitec.dto.UvExposureInfoResponse;
 import org.splitec.model.GetIndex;
+import org.splitec.model.User;
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class UvHealthService extends UvService {
@@ -18,16 +20,16 @@ public class UvHealthService extends UvService {
     if (isUvExposed(expoInfo.getRssiWifi(), expoInfo.getGpsPrecision(), expoInfo.getLuxValue())) {
       GetIndex response = getUvIndex(expoInfo.getLat(), expoInfo.getLon());
 
-      expoResponse.setMaxExposureTime(findUserSkinType(response.getResult().getSafeExposureTime(), username));
+      expoResponse.setMaxExposureTime(getSecureExposureMinTime(response.getResult().getSafeExposureTime(), username));
 
     }
     return expoResponse;
   }
 
-  public int findUserSkinType(GetIndex.SafeExposureTime exposureTimeResponse, String username) {
-    // TODO: Adicionar uma lógica para recuperar o skinType no banco de dados com base no username
-    int skinType = 1;
-    switch (skinType) {
+  public int getSecureExposureMinTime(GetIndex.SafeExposureTime exposureTimeResponse, String username) {
+    CosmosService cosmos = new CosmosService();
+    User usuario = cosmos.getUser(username);
+    switch (usuario.getSkinType()) {
       case 1:
         return exposureTimeResponse.getSt1();
       case 2:
@@ -46,8 +48,9 @@ public class UvHealthService extends UvService {
   }
 
   public int findUserHealthPoints(String username) {
-    //TODO: Fazer uma busca no banco de dados e recuperar o valor de UVHealthPoints baseado no username
-    return 98;
+    CosmosService cosmos = new CosmosService();
+    User user = cosmos.getUser(username);
+    return user.getHealthPoints();
   }
 
   public static boolean isUvExposed(double rssiWifi, double gpsPrecision, double luxValue) {
