@@ -10,4 +10,12 @@ public class UvExposureInfoResponse {
   public void setMaxExposureTime(int maxExposureTime) {
     this.maxExposureTime = maxExposureTime;
   }
+
+  public UvExposureInfoResponse(int maxExposureTime) {
+    this.maxExposureTime = maxExposureTime;
+  }
+
+  public UvExposureInfoResponse() {
+
+  }
 }

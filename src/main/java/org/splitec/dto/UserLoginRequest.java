@@ -1,12 +1,18 @@
 package org.splitec.dto;
 
+import org.springframework.util.StringUtils;
+
 public class UserLoginRequest {
   private String username;
   private String password;
   private String refreshToken;
 
   public String getPassword() {
-    return password;
+    if(StringUtils.isEmpty(password)){
+      throw new RuntimeException("No password value found. Please proper send the password on request body.");
+    } else {
+      return password;
+    }
   }
 
   public void setPassword(String password) {
@@ -14,7 +20,11 @@ public class UserLoginRequest {
   }
 
   public String getUsername() {
-    return username;
+    if(StringUtils.isEmpty(username)){
+      throw new RuntimeException("No username value found. Please proper send the username on request body.");
+    } else {
+      return username;
+    }
   }
 
   public void setUsername(String username) {

@@ -17,14 +17,12 @@ public class UvHealthService extends UvService {
     UvExposureInfoResponse expoResponse = new UvExposureInfoResponse();
     if (isUvExposed(expoInfo.getRssiWifi(), expoInfo.getGpsPrecision(), expoInfo.getLuxValue())) {
       GetIndex response = getUvIndex(expoInfo.getLat(), expoInfo.getLon());
-
-      expoResponse.setMaxExposureTime(findUserSkinType(response.getResult().getSafeExposureTime(), username));
-
+      expoResponse.setMaxExposureTime(findSecureExposureTime(response.getResult().getSafeExposureTime(), username));
     }
     return expoResponse;
   }
 
-  public int findUserSkinType(GetIndex.SafeExposureTime exposureTimeResponse, String username) {
+  public int findSecureExposureTime(GetIndex.SafeExposureTime exposureTimeResponse, String username) {
     // TODO: Adicionar uma lógica para recuperar o skinType no banco de dados com base no username
     int skinType = 1;
     switch (skinType) {
@@ -45,9 +43,13 @@ public class UvHealthService extends UvService {
     }
   }
 
-  public int findUserHealthPoints(String username) {
-    //TODO: Fazer uma busca no banco de dados e recuperar o valor de UVHealthPoints baseado no username
-    return 98;
+  public int findUserHealthPoints(String username) throws RuntimeException {
+    try {
+      //TODO: Fazer uma busca no banco de dados e recuperar o valor de UVHealthPoints baseado no username
+      return 98;
+    } catch (Exception e) {
+      throw new RuntimeException("User not found");
+    }
   }
 
   public static boolean isUvExposed(double rssiWifi, double gpsPrecision, double luxValue) {
