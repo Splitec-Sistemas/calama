@@ -19,12 +19,12 @@ public class UvHealthService extends UvService {
     UvExposureInfoResponse expoResponse = new UvExposureInfoResponse();
     if (isUvExposed(expoInfo.getRssiWifi(), expoInfo.getGpsPrecision(), expoInfo.getLuxValue())) {
       GetIndex response = getUvIndex(expoInfo.getLat(), expoInfo.getLon());
-
       expoResponse.setMaxExposureTime(getSecureExposureMinTime(response.getResult().getSafeExposureTime(), username));
 
     }
     return expoResponse;
   }
+
 
   public int getSecureExposureMinTime(GetIndex.SafeExposureTime exposureTimeResponse, String username) {
     CosmosService cosmos = new CosmosService();
