@@ -1,5 +1,6 @@
 package org.splitec.service;
 
+import org.splitec.client.DatabaseClient;
 import org.splitec.client.HttpClient;
 import org.splitec.dto.UvExposureInfoRequest;
 import org.splitec.dto.UvExposureInfoResponse;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UvHealthService extends UvService {
+
+  private static DatabaseClient databaseClient = new DatabaseClient();
 
   public UvHealthService(HttpClient httpClient) {
     super(httpClient);
@@ -25,11 +28,9 @@ public class UvHealthService extends UvService {
     return expoResponse;
   }
 
-
   public int getSecureExposureMinTime(GetIndex.SafeExposureTime exposureTimeResponse, String username) {
-    CosmosService cosmos = new CosmosService();
-    User usuario = cosmos.getUser(username);
-    switch (usuario.getSkinType()) {
+    User user = databaseClient.getUser(username);
+    switch (user.getSkinType()) {
       case 1:
         return exposureTimeResponse.getSt1();
       case 2:
@@ -48,8 +49,7 @@ public class UvHealthService extends UvService {
   }
 
   public int findUserHealthPoints(String username) {
-    CosmosService cosmos = new CosmosService();
-    User user = cosmos.getUser(username);
+    User user = databaseClient.getUser(username);
     return user.getHealthPoints();
   }
 

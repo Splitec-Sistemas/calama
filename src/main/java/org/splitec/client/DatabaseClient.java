@@ -5,19 +5,19 @@ import com.azure.cosmos.CosmosClient;
 import com.azure.cosmos.CosmosClientBuilder;
 import com.azure.cosmos.CosmosContainer;
 import com.azure.cosmos.CosmosDatabase;
-import com.azure.cosmos.models.CosmosContainerProperties;
-import com.azure.cosmos.models.CosmosContainerResponse;
-import com.azure.cosmos.models.CosmosDatabaseResponse;
-import  org.splitec.config.CosmosConfig;
+import com.azure.cosmos.models.CosmosQueryRequestOptions;
+import com.azure.cosmos.util.CosmosPagedIterable;
+import org.splitec.config.CosmosConfig;
+import org.splitec.model.User;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DatabaseClient {
 
+    private static final Logger logger = LogManager.getLogger(DatabaseClient.class);
     private CosmosClient client;
-
-    private final String databaseName = "CalamaDB";
-    private final String containerName = "Users";
-
     private CosmosDatabase database;
     private CosmosContainer container;
 
@@ -25,18 +25,9 @@ public class DatabaseClient {
         client.close();
     }
 
-    public String getDatabaseName() {
-        return databaseName;
-    }
-
-
-    public CosmosContainer getContainer() {
-        return container;
-    }
-
-    public void buildClient() {
+    private void buildClient() {
         try {
-            System.out.println("Using Azure Cosmos DB endpoint: " + CosmosConfig.HOST);
+            logger.info("Using Azure Cosmos DB endpoint: " + CosmosConfig.HOST);
 
             ArrayList<String> preferredRegions = new ArrayList<>();
             preferredRegions.add("West US");
@@ -49,36 +40,71 @@ public class DatabaseClient {
                     .consistencyLevel(ConsistencyLevel.EVENTUAL)
                     .buildClient();
 
-            createDatabaseIfNotExists();
-            createContainerIfNotExists();
+            if(database != null && container != null) {
+                fillDatabase();
+                fillContainer();
+            }
         }
         catch (Exception e) {
-            e.printStackTrace();
-            System.err.printf("Cosmos getStarted failed with %s%n", e);
+            logger.error("Cosmos getStarted failed with %s%n", e);
+            throw e;
         }
     }
 
-    private void createDatabaseIfNotExists() {
-        System.out.println("Create database " + databaseName + " if not exists.");
-
-        //  Create database if not exists
-        CosmosDatabaseResponse databaseResponse = client.createDatabaseIfNotExists(databaseName);
-        database = client.getDatabase(databaseResponse.getProperties().getId());
-
-        System.out.println("Checking database " + database.getId() + " completed!\n");
+    private void fillDatabase() {
+        try {
+            database = client.getDatabase(CosmosConfig.DATABASE_NAME);
+            logger.info("Checking database " + database.getId() + " completed!\n");
+        }
+        catch (Exception e) {
+            logger.error("Error to fill database: ", e);
+            throw e;
+        }
     }
 
-    private void createContainerIfNotExists() {
-        System.out.println("Create container " + containerName + " if not exists.");
+    private void fillContainer() {
+        try {
+            container = database.getContainer(CosmosConfig.CONTAINER_NAME);
+            logger.info("Checking container " + container.getId() + " completed!\n");
+        }
+        catch (Exception e) {
+            logger.error("Error to fill container: ", e);
+            throw e;
+        }
+    }
 
-        //  Create container if not exists
-        CosmosContainerProperties containerProperties =
-                new CosmosContainerProperties(containerName, "/skinType");
+    public User getUser (String id) {
 
-        CosmosContainerResponse containerResponse = database.createContainerIfNotExists(containerProperties);
-        container = database.getContainer(containerResponse.getProperties().getId());
+        User user = null;
 
-        System.out.println("Checking container " + container.getId() + " completed!\n");
+        try {
+            this.buildClient();
+
+            CosmosQueryRequestOptions queryOptions = new CosmosQueryRequestOptions();
+            queryOptions.setQueryMetricsEnabled(true);
+
+            String query = String.format(
+                    "SELECT * FROM %s a WHERE a.id = '%s'",
+                    CosmosConfig.DATABASE_NAME,
+                    id
+            );
+
+            CosmosPagedIterable<User> userPagedIterable = container.queryItems(query, queryOptions, User.class);
+            AtomicReference<User> userReference = new AtomicReference<>();
+
+            userPagedIterable.iterableByPage().forEach(cosmosItemPropertiesFeedResponse -> {
+                userReference.set(cosmosItemPropertiesFeedResponse
+                        .getResults().get(0));
+            });
+            user = userReference.get();
+        }
+        catch (Exception e) {
+            logger.error("Error to get User: ", e);
+            close();
+            throw e;
+        }
+        close();
+        return user;
     }
 }
 

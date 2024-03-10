@@ -3,6 +3,9 @@ package org.splitec.config;
 import org.apache.commons.lang3.StringUtils;
 
 public class CosmosConfig {
+
+    public static final String DATABASE_NAME = "CalamaDB";
+    public static final String CONTAINER_NAME = "Users";
     public static String MASTER_KEY =
             System.getProperty("ACCOUNT_KEY",
                     StringUtils.defaultString(StringUtils.trimToNull(
