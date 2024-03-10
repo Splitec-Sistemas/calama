@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UvHealthService extends UvService {
 
-  private static DatabaseClient databaseClient = new DatabaseClient();
+  private final DatabaseClient databaseClient = new DatabaseClient();
 
   public UvHealthService(HttpClient httpClient) {
     super(httpClient);

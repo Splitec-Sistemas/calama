@@ -21,11 +21,7 @@ public class DatabaseClient {
     private CosmosDatabase database;
     private CosmosContainer container;
 
-    public void close() {
-        client.close();
-    }
-
-    private void buildClient() {
+    public void buildClient() {
         try {
             logger.info("Using Azure Cosmos DB endpoint: " + CosmosConfig.HOST);
 
@@ -40,10 +36,8 @@ public class DatabaseClient {
                     .consistencyLevel(ConsistencyLevel.EVENTUAL)
                     .buildClient();
 
-            if(database != null && container != null) {
-                fillDatabase();
-                fillContainer();
-            }
+            fillDatabase();
+            fillContainer();
         }
         catch (Exception e) {
             logger.error("Cosmos getStarted failed with %s%n", e);
@@ -76,10 +70,9 @@ public class DatabaseClient {
     public User getUser (String id) {
 
         User user = null;
+        this.buildClient();
 
         try {
-            this.buildClient();
-
             CosmosQueryRequestOptions queryOptions = new CosmosQueryRequestOptions();
             queryOptions.setQueryMetricsEnabled(true);
 
@@ -90,20 +83,22 @@ public class DatabaseClient {
             );
 
             CosmosPagedIterable<User> userPagedIterable = container.queryItems(query, queryOptions, User.class);
-            AtomicReference<User> userReference = new AtomicReference<>();
 
-            userPagedIterable.iterableByPage().forEach(cosmosItemPropertiesFeedResponse -> {
-                userReference.set(cosmosItemPropertiesFeedResponse
-                        .getResults().get(0));
-            });
-            user = userReference.get();
+            if(userPagedIterable.stream().findAny().isPresent()){
+                AtomicReference<User> userReference = new AtomicReference<>();
+                userPagedIterable.iterableByPage().forEach(cosmosItemPropertiesFeedResponse -> {
+                    userReference.set(cosmosItemPropertiesFeedResponse
+                            .getResults().get(0));
+                });
+                user = userReference.get();
+            }
         }
         catch (Exception e) {
             logger.error("Error to get User: ", e);
-            close();
+            client.close();
             throw e;
         }
-        close();
+        client.close();
         return user;
     }
 }
