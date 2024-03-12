@@ -5,7 +5,10 @@ import com.azure.cosmos.CosmosClient;
 import com.azure.cosmos.CosmosClientBuilder;
 import com.azure.cosmos.CosmosContainer;
 import com.azure.cosmos.CosmosDatabase;
+import com.azure.cosmos.implementation.ConflictException;
+import com.azure.cosmos.models.CosmosItemRequestOptions;
 import com.azure.cosmos.models.CosmosQueryRequestOptions;
+import com.azure.cosmos.models.PartitionKey;
 import com.azure.cosmos.util.CosmosPagedIterable;
 import org.splitec.config.CosmosConfig;
 import org.splitec.model.User;
@@ -100,6 +103,23 @@ public class DatabaseClient {
         }
         client.close();
         return user;
+    }
+
+    public void InsertUser(User user) {
+
+        this.buildClient();
+
+        try {
+            container.createItem(user.getId(), new PartitionKey(user.getSkinType()), new CosmosItemRequestOptions());
+        } catch (ConflictException e) {
+            logger.error("User already exists : ", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("Error to insert User: ", e);
+            throw e;
+        } finally {
+            client.close();
+        }
     }
 }
 
