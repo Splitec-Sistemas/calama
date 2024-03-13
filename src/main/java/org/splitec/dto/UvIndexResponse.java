@@ -1,30 +1,30 @@
 package org.splitec.dto;
 
 public class UvIndexResponse {
-  private double latitude;
-  private double longitude;
+  private String latitude;
+  private String longitude;
   private double uvIndex;
 
-  public UvIndexResponse(double latitude, double longitude, double uvIndex) {
+  public UvIndexResponse(String latitude, String longitude, double uvIndex) {
     this.latitude = latitude;
     this.longitude = longitude;
     this.uvIndex = uvIndex;
   }
 
   // Getters e setters
-  public double getLatitude() {
+  public String getLatitude() {
     return latitude;
   }
 
-  public void setLatitude(double latitude) {
+  public void setLatitude(String latitude) {
     this.latitude = latitude;
   }
 
-  public double getLongitude() {
+  public String getLongitude() {
     return longitude;
   }
 
-  public void setLongitude(double longitude) {
+  public void setLongitude(String longitude) {
     this.longitude = longitude;
   }
 

@@ -23,7 +23,6 @@ public class UvHealthService extends UvService {
     if (isUvExposed(expoInfo.getRssiWifi(), expoInfo.getGpsPrecision(), expoInfo.getLuxValue())) {
       GetIndex response = getUvIndex(expoInfo.getLat(), expoInfo.getLon());
       expoResponse.setMaxExposureTime(getSecureExposureMinTime(response.getResult().getSafeExposureTime(), username));
-
     }
     return expoResponse;
   }

@@ -35,9 +35,25 @@ public class AuthenticationController {
       String newAccessToken = jwtService.generateToken(username);
       String newRefreshToken = jwtService.generateRefreshToken(username);
       return ResponseEntity.ok(new UserLoginResponse(newAccessToken, newRefreshToken));
-    } catch (Exception e){
+    } catch (Exception e) {
       return ResponseEntity.status(401).body(new ErrorResponse(e.getLocalizedMessage(), 401));
     }
 
+  }
+
+  @PostMapping("/register")
+  public ResponseEntity<Object> register(@RequestBody UserLoginRequest user) {
+    try {
+      user.getPassword();
+      user.getSkinType();
+      user.getUsername();
+      /*
+         TODO: Criar o usuário cadastrando esses tres parametros acima,
+          lembre-se que o username deve ser unico no banco para cada usuário, nao podem existir dois iguais.
+       */
+      return ResponseEntity.ok("Success");
+    } catch (Exception e) {
+      return ResponseEntity.status(401).body(new ErrorResponse(e.getLocalizedMessage(), 401));
+    }
   }
 }

@@ -6,6 +6,15 @@ public class UserLoginRequest {
   private String username;
   private String password;
   private String refreshToken;
+  private int skinType;
+
+  public int getSkinType() {
+    return skinType;
+  }
+
+  public void setSkinType(int skinType) {
+    this.skinType = skinType;
+  }
 
   public String getPassword() {
     if(StringUtils.isEmpty(password)){

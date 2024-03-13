@@ -22,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Define a política de sessão como stateless
         .and()
         .authorizeRequests()
-        .antMatchers("/login").permitAll() // Permite o acesso não autenticado ao endpoint de login
+        .antMatchers("/login", "/register").permitAll() // Permite o acesso não autenticado ao endpoint de login
         .anyRequest().authenticated() // Todos os outros requests precisam ser autenticados
         .and()
         .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class); // Adiciona o filtro JWT antes do filtro de autenticação padrão

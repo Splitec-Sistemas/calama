@@ -7,100 +7,99 @@ import com.azure.cosmos.CosmosContainer;
 import com.azure.cosmos.CosmosDatabase;
 import com.azure.cosmos.models.CosmosQueryRequestOptions;
 import com.azure.cosmos.util.CosmosPagedIterable;
-import org.splitec.config.CosmosConfig;
-import org.splitec.model.User;
-import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicReference;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.splitec.config.CosmosConfig;
+import org.splitec.model.User;
+
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DatabaseClient {
 
-    private static final Logger logger = LogManager.getLogger(DatabaseClient.class);
-    private CosmosClient client;
-    private CosmosDatabase database;
-    private CosmosContainer container;
+  private static final Logger logger = LogManager.getLogger(DatabaseClient.class);
+  private CosmosClient client;
+  private CosmosDatabase database;
+  private CosmosContainer container;
 
-    public void buildClient() {
-        try {
-            logger.info("Using Azure Cosmos DB endpoint: " + CosmosConfig.HOST);
+  public void buildClient() {
+    try {
+      logger.info("Using Azure Cosmos DB endpoint: " + CosmosConfig.HOST);
 
-            ArrayList<String> preferredRegions = new ArrayList<>();
-            preferredRegions.add("West US");
+      ArrayList<String> preferredRegions = new ArrayList<>();
+      preferredRegions.add("West US");
 
-            client = new CosmosClientBuilder()
-                    .endpoint(CosmosConfig.HOST)
-                    .key(CosmosConfig.MASTER_KEY)
-                    .preferredRegions(preferredRegions)
-                    .userAgentSuffix("CosmosDBJavaQuickstart")
-                    .consistencyLevel(ConsistencyLevel.EVENTUAL)
-                    .buildClient();
+      client = new CosmosClientBuilder()
+          .endpoint(CosmosConfig.HOST)
+          .key(CosmosConfig.MASTER_KEY)
+          .preferredRegions(preferredRegions)
+          .userAgentSuffix("CosmosDBJavaQuickstart")
+          .consistencyLevel(ConsistencyLevel.EVENTUAL)
+          .buildClient();
 
-            fillDatabase();
-            fillContainer();
-        }
-        catch (Exception e) {
-            logger.error("Cosmos getStarted failed with %s%n", e);
-            throw e;
-        }
+      fillDatabase();
+      fillContainer();
+    } catch (Exception e) {
+      logger.error("Cosmos getStarted failed with %s%n", e);
+      throw e;
     }
+  }
 
-    private void fillDatabase() {
-        try {
-            database = client.getDatabase(CosmosConfig.DATABASE_NAME);
-            logger.info("Checking database " + database.getId() + " completed!\n");
-        }
-        catch (Exception e) {
-            logger.error("Error to fill database: ", e);
-            throw e;
-        }
+  private void fillDatabase() {
+    try {
+      database = client.getDatabase(CosmosConfig.DATABASE_NAME);
+      logger.info("Checking database " + database.getId() + " completed!\n");
+    } catch (Exception e) {
+      logger.error("Error to fill database: ", e);
+      throw e;
     }
+  }
 
-    private void fillContainer() {
-        try {
-            container = database.getContainer(CosmosConfig.CONTAINER_NAME);
-            logger.info("Checking container " + container.getId() + " completed!\n");
-        }
-        catch (Exception e) {
-            logger.error("Error to fill container: ", e);
-            throw e;
-        }
+  private void fillContainer() {
+    try {
+      container = database.getContainer(CosmosConfig.CONTAINER_NAME);
+      logger.info("Checking container " + container.getId() + " completed!\n");
+    } catch (Exception e) {
+      logger.error("Error to fill container: ", e);
+      throw e;
     }
+  }
 
-    public User getUser (String id) {
+  public User getUser(String id) {
 
-        User user = null;
-        this.buildClient();
+    User user = null;
+    this.buildClient();
 
-        try {
-            CosmosQueryRequestOptions queryOptions = new CosmosQueryRequestOptions();
-            queryOptions.setQueryMetricsEnabled(true);
+    try {
+      CosmosQueryRequestOptions queryOptions = new CosmosQueryRequestOptions();
+      queryOptions.setQueryMetricsEnabled(true);
 
-            String query = String.format(
-                    "SELECT * FROM %s a WHERE a.id = '%s'",
-                    CosmosConfig.DATABASE_NAME,
-                    id
-            );
+      String query = String.format(
+          "SELECT * FROM %s a WHERE a.id = '%s'",
+          CosmosConfig.DATABASE_NAME,
+          id
+      );
 
-            CosmosPagedIterable<User> userPagedIterable = container.queryItems(query, queryOptions, User.class);
+      CosmosPagedIterable<User> userPagedIterable = container.queryItems(query, queryOptions, User.class);
 
-            if(userPagedIterable.stream().findAny().isPresent()){
-                AtomicReference<User> userReference = new AtomicReference<>();
-                userPagedIterable.iterableByPage().forEach(cosmosItemPropertiesFeedResponse -> {
-                    userReference.set(cosmosItemPropertiesFeedResponse
-                            .getResults().get(0));
-                });
-                user = userReference.get();
-            }
-        }
-        catch (Exception e) {
-            logger.error("Error to get User: ", e);
-            client.close();
-            throw e;
-        }
-        client.close();
-        return user;
+      if (userPagedIterable.stream().findAny().isPresent()) {
+        AtomicReference<User> userReference = new AtomicReference<>();
+        userPagedIterable.iterableByPage().forEach(cosmosItemPropertiesFeedResponse -> {
+          userReference.set(cosmosItemPropertiesFeedResponse
+              .getResults().get(0));
+        });
+        user = userReference.get();
+      }
+    } catch (Exception e) {
+      logger.error("Error to get User: ", e);
+      client.close();
+      throw e;
     }
+    client.close();
+    return user;
+  }
+
+  // TODO: Criar um metodo para cadastrar um novo usuário
 }
 
 

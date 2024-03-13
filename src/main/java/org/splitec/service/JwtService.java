@@ -38,14 +38,14 @@ public class JwtService {
 
   public void validateUser(String username) throws Exception {
     User user = databaseClient.getUser(username);
-    if(user == null) {
+    if (user == null) {
       throw new Exception("User Not Found");
     }
   }
 
   public void validateRefreshToken(String username, String refreshToken) throws Exception {
     User user = databaseClient.getUser(username);
-    if(!Objects.equals(user.getRefreshToken(), refreshToken)) {
+    if (!Objects.equals(user.getRefreshToken(), refreshToken)) {
       throw new Exception("Invalid Refresh Token");
     }
   }
