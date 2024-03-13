@@ -51,7 +51,6 @@ public class AuthenticationController {
          TODO: Criar o usuário cadastrando esses tres parametros acima,
           lembre-se que o username deve ser unico no banco para cada usuário, nao podem existir dois iguais.
        */
-
       return ResponseEntity.ok("Success");
     } catch (Exception e) {
       return ResponseEntity.status(401).body(new ErrorResponse(e.getLocalizedMessage(), 401));
