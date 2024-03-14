@@ -2,10 +2,19 @@ package org.splitec.model;
 
 public class User {
     private String id;
+    private String password;
     private int healthPoints;
     private String name;
     private int skinType;
     private String refreshToken;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getId() {
         return id;

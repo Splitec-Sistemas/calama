@@ -5,7 +5,10 @@ import com.azure.cosmos.CosmosClient;
 import com.azure.cosmos.CosmosClientBuilder;
 import com.azure.cosmos.CosmosContainer;
 import com.azure.cosmos.CosmosDatabase;
+import com.azure.cosmos.implementation.ConflictException;
+import com.azure.cosmos.models.CosmosItemRequestOptions;
 import com.azure.cosmos.models.CosmosQueryRequestOptions;
+import com.azure.cosmos.models.PartitionKey;
 import com.azure.cosmos.util.CosmosPagedIterable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -82,24 +85,40 @@ public class DatabaseClient {
 
       CosmosPagedIterable<User> userPagedIterable = container.queryItems(query, queryOptions, User.class);
 
-      if (userPagedIterable.stream().findAny().isPresent()) {
-        AtomicReference<User> userReference = new AtomicReference<>();
-        userPagedIterable.iterableByPage().forEach(cosmosItemPropertiesFeedResponse -> {
-          userReference.set(cosmosItemPropertiesFeedResponse
-              .getResults().get(0));
-        });
-        user = userReference.get();
-      }
-    } catch (Exception e) {
-      logger.error("Error to get User: ", e);
-      client.close();
-      throw e;
+            if(userPagedIterable.stream().findAny().isPresent()){
+                AtomicReference<User> userReference = new AtomicReference<>();
+                userPagedIterable.iterableByPage().forEach(cosmosItemPropertiesFeedResponse -> {
+                    userReference.set(cosmosItemPropertiesFeedResponse
+                            .getResults().get(0));
+                });
+                user = userReference.get();
+            }
+        }
+        catch (Exception e) {
+            logger.error("Error to get User: ", e);
+            client.close();
+            throw e;
+        }
+        client.close();
+        return user;
     }
-    client.close();
-    return user;
-  }
 
-  // TODO: Criar um metodo para cadastrar um novo usuário
+    public void InsertUser(User user) {
+
+        this.buildClient();
+
+        try {
+            container.createItem(user.getId(), new PartitionKey(user.getSkinType()), new CosmosItemRequestOptions());
+        } catch (ConflictException e) {
+            logger.error("User already exists : ", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("Error to insert User: ", e);
+            throw e;
+        } finally {
+            client.close();
+        }
+    }
 }
 
 
