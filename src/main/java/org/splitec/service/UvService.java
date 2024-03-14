@@ -40,9 +40,7 @@ public class UvService {
         headers,
         uriVariables,
         GetIndex.class);
+
     return response.getBody();
-    //double uvIndex = response.getBody().getResult().getUv();
-   //GetIndex.SafeExposureTime safeExposureTime = response.getBody().getResult().getSafeExposureTime();
-    //return new UvIndexResponse(latitude, longitude, uvIndex , safeExposureTime);
   }
 }

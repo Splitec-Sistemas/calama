@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UvHealthController extends UvHealthService {
 
   JwtService tokenService = new JwtService();
+
   public UvHealthController(HttpClient httpClient) {
     super(httpClient);
   }
