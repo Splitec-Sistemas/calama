@@ -108,7 +108,7 @@ public class DatabaseClient {
         this.buildClient();
 
         try {
-            container.createItem(user.getId(), new PartitionKey(user.getSkinType()), new CosmosItemRequestOptions());
+            container.createItem(user, new PartitionKey(user.getSkinType()), new CosmosItemRequestOptions());
         } catch (ConflictException e) {
             logger.error("User already exists : ", e);
             throw e;

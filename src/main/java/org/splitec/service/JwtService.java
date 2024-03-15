@@ -49,4 +49,9 @@ public class JwtService {
       throw new Exception("Invalid Refresh Token");
     }
   }
+
+  public void createUser(String username, String password, int skinType) {
+    User user = new User(username, password, skinType);
+    databaseClient.InsertUser(user);
+  }
 }
