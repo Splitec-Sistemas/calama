@@ -2,6 +2,8 @@ package org.splitec.model;
 
 public class User {
 
+    public User() {}
+
     public User(
             String username,
             String password,
