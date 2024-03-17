@@ -43,7 +43,7 @@ public class DatabaseClient {
       fillDatabase();
       fillContainer();
     } catch (Exception e) {
-      logger.error("Cosmos getStarted failed with %s%n", e);
+      logger.error("Cosmos getStarted failed with %s%n" + e);
       throw e;
     }
   }
@@ -53,7 +53,7 @@ public class DatabaseClient {
       database = client.getDatabase(CosmosConfig.DATABASE_NAME);
       logger.info("Checking database " + database.getId() + " completed!\n");
     } catch (Exception e) {
-      logger.error("Error to fill database: ", e);
+      logger.error("Error to fill database: " + e);
       throw e;
     }
   }
@@ -63,7 +63,7 @@ public class DatabaseClient {
       container = database.getContainer(CosmosConfig.CONTAINER_NAME);
       logger.info("Checking container " + container.getId() + " completed!\n");
     } catch (Exception e) {
-      logger.error("Error to fill container: ", e);
+      logger.error("Error to fill container: " + e);
       throw e;
     }
   }
@@ -95,7 +95,7 @@ public class DatabaseClient {
             }
         }
         catch (Exception e) {
-            logger.error("Error to get User: ", e);
+            logger.error("Error to get User: " + e);
             client.close();
             throw e;
         }
@@ -110,10 +110,29 @@ public class DatabaseClient {
         try {
             container.createItem(user, new PartitionKey(user.getSkinType()), new CosmosItemRequestOptions());
         } catch (ConflictException e) {
-            logger.error("User already exists : ", e);
+            logger.error("User already exists : " + e);
             throw e;
         } catch (Exception e) {
-            logger.error("Error to insert User: ", e);
+            logger.error("Error to insert User: " + e);
+            throw e;
+        } finally {
+            client.close();
+        }
+    }
+
+    public void UpdateUser(User user) {
+
+        this.buildClient();
+
+        try {
+            container.replaceItem(
+                    user,
+                    user.getId(),
+                    new PartitionKey(user.getSkinType()),
+                    new CosmosItemRequestOptions()
+            );
+        } catch (Exception e) {
+            logger.error("Error to update User: " + e);
             throw e;
         } finally {
             client.close();
