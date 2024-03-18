@@ -1,6 +1,20 @@
 package org.splitec.model;
 
 public class User {
+
+    public User() {}
+
+    public User(
+            String username,
+            String password,
+            int skinType)
+    {
+        this.id = username;
+        this.password = password;
+        this.healthPoints = 100;
+        this.skinType = skinType;
+    }
+
     private String id;
     private String password;
     private int healthPoints;
