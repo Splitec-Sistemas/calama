@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +16,12 @@ import java.util.Map;
 public class UvService {
 
   private final HttpClient httpClient;
+  int actualReqCount = 0;
+  int tokenIndex = 0;
+  String[] tokens = {"openuv-4turllogbjxz-io", "openuv-3yquj97rltxly4oc-io", "openuv-32315harlnc70pf4-io",
+      "openuv-2lsusjkrlpvs9wpf-io"};
+
+  LocalDateTime lastUpdate = LocalDateTime.now();
 
   @Autowired
   public UvService(HttpClient httpClient) {
@@ -29,7 +37,7 @@ public class UvService {
         .toUriString();
 
     Map<String, String> headers = new HashMap<>();
-    headers.put("x-access-token", "openuv-4turllogbjxz-io");
+    headers.put("x-access-token", tokenRotation());
 
     Map<String, String> uriVariables = new HashMap<>();
     uriVariables.put("lat", latitude);
@@ -42,5 +50,31 @@ public class UvService {
         GetIndex.class);
 
     return response.getBody();
+  }
+
+  private String tokenRotation() {
+    if (isResetToken()) {
+      this.actualReqCount = 0;
+    }
+    if (this.actualReqCount > 50) {
+      this.actualReqCount = 0;
+      resolveTokenIndex();
+    }
+    this.actualReqCount++;
+    return this.tokens[this.tokenIndex];
+  }
+
+  private void resolveTokenIndex() {
+    if (this.tokenIndex < tokens.length) {
+      this.tokenIndex = tokenIndex + 1;
+    } else {
+      this.tokenIndex = 0;
+    }
+  }
+
+  public boolean isResetToken() {
+    LocalDateTime actual = LocalDateTime.now();
+    long days = ChronoUnit.DAYS.between(this.lastUpdate, actual);
+    return days >= 1;
   }
 }
