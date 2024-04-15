@@ -7,48 +7,13 @@
 	},
 	"item": [
 		{
-			"name": "Get Index",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnYWJyaWVsIiwiZXhwIjoxNzA4MDMyNTAzfQ.B0n9KuVgzaZp57Y5WMR24hKaarXPHUEDnppgSsYaS1VfkG2Sj6-vgabk7FW7zkWn-FLpLKYU51yzIMWI8c3XgA",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "localhost:8080/uv/index?latitude=-23.723223&longitude=-46.626690",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"uv",
-						"index"
-					],
-					"query": [
-						{
-							"key": "latitude",
-							"value": "-23.723223"
-						},
-						{
-							"key": "longitude",
-							"value": "-46.626690"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Login",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"gabriel\",\r\n    \"password\": \"testing\"\r\n}",
+					"raw": "{\r\n    \"username\": \"tads\",\r\n    \"password\": \"tads123\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -75,13 +40,13 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnYWJyaWVsIiwiZXhwIjoxNzA4MDM5NDMxfQ.LbQ5YaSHUly3pfGZvlf1VKRI8_Ewu84SOFvdaoyM1I37HmL7OJCLmYg9R5scjL-Sp3EjLtBVRyl10Z_vCgd17A",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0YWRzIiwiZXhwIjoxNzExNDE3NTA2fQ.iS0ndpHXTzL5lmAAyZ_gdrD77WppDSE2WEdGW6As9hAuBZc7wQI421w8y8XvW_V8OxgmHCiCL-rbVDvqYMqiYg",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"refreshToken\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnYWJyaWVsIiwiZXhwIjoxNzA4MjExMzMxfQ.3Je9KVYAVXPv41KZqJGEOSd_PNJ0yT0XIizFXF8ysLDM2-qKmZl8d2HdHOqmNMap4BBNp2Fo4afIuJFn7MepQA\"\r\n}",
+					"raw": "{\r\n    \"refreshToken\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0YWRzIiwiZXhwIjoxNzExNTAzOTA2fQ.mKwAKwToG6bt1PZ19opnmJoeMYFzcnL62aRq3kKSLFX62Ln_ZyctH1PBxPacQrMVSn3NAg8a8qe8tORXTosgTQ\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -89,9 +54,12 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/token/refresh",
+					"raw": "20.150.193.229:8080/token/refresh",
 					"host": [
-						"localhost"
+						"20",
+						"150",
+						"193",
+						"229"
 					],
 					"port": "8080",
 					"path": [
@@ -103,44 +71,44 @@
 			"response": []
 		},
 		{
-			"name": "Get Uv Health Points",
+			"name": "Get Daily Uv Points",
 			"request": {
 				"method": "GET",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnYWJyaWVsIiwiZXhwIjoxNzA4MzA3MTkzfQ.K1VW5yFxVFCJOQVWQLCu8kotqSR8h8bItNTYNO1fLfb3Mbwh6MFpjNOi0IjpCecjnCqDqN9eZYigi0hWy0t0fQ",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0YWRzIiwiZXhwIjoxNzEzMjMwMjQ2fQ.XqRGEFWyu4GxJt8iPFyorLDssehkdQkHK9srnlymuvxyIsOMiD-C1PpWUSMOY8sFiBc_G97AmK4GzqGqcdeZQQ",
 						"type": "text"
 					}
 				],
 				"url": {
-					"raw": "localhost:8080/uv/health",
+					"raw": "localhost:8080/uv/dailypoints",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"uv",
-						"health"
+						"dailypoints"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Uv Exposure",
+			"name": "Check Uv Exposure",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnYWJyaWVsIiwiZXhwIjoxNzA4Mzk0NjExfQ.BfYVPP6ruU3vJxQ5hSYNnPgcZM7d7gjpI-2Bj3mfeNluFnGIOxx6Zx2YF5GfNkuVutU8oPOm833OT3T4omtwqw",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzcGxpdGVjIiwiZXhwIjoxNzEzMDUyNjYyfQ.3sXb7rNY66ZXJy4U3wqZMKpUx3Gu66NrKhpJhM0tpHeBW8svHVAO_Y82mGVbLf5G_koyBWId3B5MgieGGK072g",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"rssiWifi\": 90,\r\n    \"gpsPrecision\": 15,\r\n    \"luxValue\": 10,\r\n    \"lat\": \"35.898390\",\r\n    \"lon\": \"140.716374\"\r\n\r\n}",
+					"raw": "{\r\n    \"rssiWifi\": 90,\r\n    \"gpsPrecision\": 15,\r\n    \"luxValue\": 1000,\r\n    \"lat\": \"-26.29\",\r\n    \"lon\": \"146.84\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -157,6 +125,71 @@
 						"uv",
 						"health",
 						"highuv"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"splitec\",\r\n    \"password\": \"splitec123\",\r\n    \"skinType\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "20.150.193.229:8080/register",
+					"host": [
+						"20",
+						"150",
+						"193",
+						"229"
+					],
+					"port": "8080",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Insert Daily Point",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzcGxpdGVjIiwiZXhwIjoxNzEzMjI3NzAzfQ.KRypW5RiWQ-ItlBLV8SNFBg6Ki1-GCwJMQPPAIqJwLElkMpN1Ai9GO3DOCrX3VhxdPtWZDuM8ieN7fICezupRQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"dailyPoints\": {\r\n        \"points\": 98\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/uv/dailypoints/insert",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"uv",
+						"dailypoints",
+						"insert"
 					]
 				}
 			},

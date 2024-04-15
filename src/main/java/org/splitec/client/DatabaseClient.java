@@ -85,59 +85,56 @@ public class DatabaseClient {
 
       CosmosPagedIterable<User> userPagedIterable = container.queryItems(query, queryOptions, User.class);
 
-            if(userPagedIterable.stream().findAny().isPresent()){
-                AtomicReference<User> userReference = new AtomicReference<>();
-                userPagedIterable.iterableByPage().forEach(cosmosItemPropertiesFeedResponse -> {
-                    userReference.set(cosmosItemPropertiesFeedResponse
-                            .getResults().get(0));
-                });
-                user = userReference.get();
-            }
-        }
-        catch (Exception e) {
-            logger.error("Error to get User: " + e);
-            client.close();
-            throw e;
-        }
-        client.close();
-        return user;
+      if (userPagedIterable.stream().findAny().isPresent()) {
+        AtomicReference<User> userReference = new AtomicReference<>();
+        userPagedIterable.iterableByPage().forEach(cosmosItemPropertiesFeedResponse -> {
+          userReference.set(cosmosItemPropertiesFeedResponse
+              .getResults().get(0));
+        });
+        user = userReference.get();
+      }
+    } catch (Exception e) {
+      logger.error("Error to get User: " + e);
+      client.close();
+      throw e;
     }
+    client.close();
+    return user;
+  }
 
-    public void InsertUser(User user) {
+  public void InsertUser(User user) {
 
-        this.buildClient();
+    this.buildClient();
 
-        try {
-            container.createItem(user, new PartitionKey(user.getSkinType()), new CosmosItemRequestOptions());
-        } catch (ConflictException e) {
-            logger.error("User already exists : " + e);
-            throw e;
-        } catch (Exception e) {
-            logger.error("Error to insert User: " + e);
-            throw e;
-        } finally {
-            client.close();
-        }
+    try {
+      container.createItem(user, new PartitionKey(user.getSkinType()), new CosmosItemRequestOptions());
+    } catch (ConflictException e) {
+      logger.error("User already exists : " + e);
+      throw e;
+    } catch (Exception e) {
+      logger.error("Error to insert User: " + e);
+      throw e;
+    } finally {
+      client.close();
     }
+  }
 
-    public void UpdateUser(User user) {
-
-        this.buildClient();
-
-        try {
-            container.replaceItem(
-                    user,
-                    user.getId(),
-                    new PartitionKey(user.getSkinType()),
-                    new CosmosItemRequestOptions()
-            );
-        } catch (Exception e) {
-            logger.error("Error to update User: " + e);
-            throw e;
-        } finally {
-            client.close();
-        }
+  public void UpdateUser(User user) {
+    this.buildClient();
+    try {
+      container.replaceItem(
+          user,
+          user.getId(),
+          new PartitionKey(user.getSkinType()),
+          new CosmosItemRequestOptions()
+      );
+    } catch (Exception e) {
+      logger.error("Error to update User: " + e);
+      throw e;
+    } finally {
+      client.close();
     }
+  }
 }
 
 
