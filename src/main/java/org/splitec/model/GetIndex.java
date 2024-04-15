@@ -10,7 +10,11 @@ public class GetIndex {
   }
 
   public static class Result {
+    @JsonProperty("uv")
     private double uv;
+
+    @JsonProperty("uv_max")
+    private double uvMax;
 
     @JsonProperty("safe_exposure_time")
     private SafeExposureTime safeExposureTime;
@@ -21,6 +25,18 @@ public class GetIndex {
 
     public double getUv() {
       return uv;
+    }
+
+    public void setUv(double uv) {
+      this.uv = uv;
+    }
+
+    public double getUvMax() {
+      return uvMax;
+    }
+
+    public void setUvMax(double uvMax) {
+      this.uvMax = uvMax;
     }
 
   }

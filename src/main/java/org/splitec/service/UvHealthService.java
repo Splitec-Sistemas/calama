@@ -4,9 +4,17 @@ import org.splitec.client.DatabaseClient;
 import org.splitec.client.HttpClient;
 import org.splitec.dto.UvExposureInfoRequest;
 import org.splitec.dto.UvExposureInfoResponse;
+import org.splitec.model.DailyPoints;
 import org.splitec.model.GetIndex;
 import org.splitec.model.User;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 
 @Service
@@ -23,6 +31,8 @@ public class UvHealthService extends UvService {
     if (isUvExposed(expoInfo.getRssiWifi(), expoInfo.getGpsPrecision(), expoInfo.getLuxValue())) {
       GetIndex response = getUvIndex(expoInfo.getLat(), expoInfo.getLon());
       expoResponse.setMaxExposureTime(getSecureExposureMinTime(response.getResult().getSafeExposureTime(), username));
+      expoResponse.setUv(response.getResult().getUv());
+      expoResponse.setUvMax(response.getResult().getUvMax());
     }
     return expoResponse;
   }
@@ -47,9 +57,43 @@ public class UvHealthService extends UvService {
     }
   }
 
-  public int findUserHealthPoints(String username) {
+  public List<DailyPoints> findUserHealthPoints(String username) {
     User user = databaseClient.getUser(username);
-    return user.getHealthPoints();
+    try {
+      Objects.requireNonNull(user.getDailyPoints());
+      return user.getDailyPoints();
+    } catch (Exception e) {
+      throw new RuntimeException("No records found");
+    }
+  }
+
+  public void insertDailyPointRegister(String username, DailyPoints dailyPoints) {
+    // Retrieve actual daily points list from user
+    User user = databaseClient.getUser(username);
+    List<DailyPoints> actualPoints;
+    if (Objects.isNull(user.getDailyPoints())) {
+      actualPoints = new ArrayList<>();
+    } else {
+      actualPoints = user.getDailyPoints();
+    }
+    setDailyPointsDateTime(dailyPoints);
+    // Add new register to the user
+    actualPoints.add(dailyPoints);
+    user.setDailyPoints(actualPoints);
+    databaseClient.UpdateUser(user);
+  }
+
+  public void setDailyPointsDateTime(DailyPoints dailyPoints) {
+    try {
+      Optional<String> zones = ZoneId.getAvailableZoneIds()
+          .stream()
+          .filter(c -> c.contains("Brazil"))
+          .findFirst();
+      LocalDate date = LocalDate.now(ZoneId.of(zones.get()));
+      dailyPoints.setDatetime(date.toString());
+    } catch (Exception e) {
+      throw new RuntimeException("Error while setting DateTime: " + e.getLocalizedMessage());
+    }
   }
 
   public static boolean isUvExposed(double rssiWifi, double gpsPrecision, double luxValue) {
@@ -63,7 +107,7 @@ public class UvHealthService extends UvService {
     }
 
     double scoreLux;
-    if (luxValue <= 100) {
+    if (luxValue <= 500) {
       scoreLux = 0;
     } else {
       scoreLux = 1;

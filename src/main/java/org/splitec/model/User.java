@@ -1,26 +1,32 @@
 package org.splitec.model;
 
+import java.util.List;
+
 public class User {
 
     public User() {}
 
-    public User(
-            String username,
-            String password,
-            int skinType)
-    {
+    public User(String username, String password, int skinType) {
         this.id = username;
         this.password = password;
-        this.healthPoints = 100;
         this.skinType = skinType;
     }
 
     private String id;
     private String password;
-    private int healthPoints;
     private String name;
     private int skinType;
     private String refreshToken;
+
+    public List<DailyPoints> getDailyPoints() {
+        return dailyPoints;
+    }
+
+    public void setDailyPoints(List<DailyPoints> dailyPoints) {
+        this.dailyPoints = dailyPoints;
+    }
+
+    private List<DailyPoints> dailyPoints;
 
     public String getPassword() {
         return password;
@@ -36,14 +42,6 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public int getHealthPoints() {
-        return healthPoints;
-    }
-
-    public void setHealthPoints(int healthPoints) {
-        this.healthPoints = healthPoints;
     }
 
     public String getName() {
